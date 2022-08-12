@@ -16,7 +16,7 @@ python3 -m tpu_perf.precision_benchmark --list default_cases.txt
 
 ## Usage - Git LFS
 
-On default, cloning this repository will not download any ONNX models. Install
+On default, cloning this repository will not download any models. Install
 Git LFS with `pip install git-lfs`.
 
 To download a specific model:
