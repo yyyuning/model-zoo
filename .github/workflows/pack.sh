@@ -21,7 +21,7 @@ which pbzip2 &> /dev/null || {
 echo "Save whole model-zoo..."
 tar -I pbzip2 \
     -cO \
-    --transform 's#^#model-zoo/#' \
+    --transform 's#^#model-zoo/#S' \
     --exclude ILSVRC2012_img_val/* \
     --exclude .git \
     --exclude 'output/*' \
