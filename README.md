@@ -20,7 +20,7 @@ On default, cloning this repository will not download any models. Install
 Git LFS with `pip install git-lfs`.
 
 To download a specific model:
-`git lfs pull --include="[path to model].onnx" --exclude=""`
+`git lfs pull --include="path/to/model" --exclude=""`
 
 To download all models:
 `git lfs pull --include="*" --exclude=""`
