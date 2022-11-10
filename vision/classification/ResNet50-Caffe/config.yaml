@@ -6,7 +6,7 @@ gops: 7.73
 model: $(home)/ResNet-50-deploy.prototxt
 weight: $(home)/ResNet-50-model.caffemodel
 
-fp32_compile_options:
+fp_compile_options:
   bmnetc
     --model $(model)
     --weight $(weight)
@@ -62,6 +62,6 @@ harness:
   type: topk
   args:
     - name: FP32
-      bmodel: $(workdir)/1b.fp32.compilation/compilation.bmodel
+      bmodel: $(workdir)/1b.fp.compilation/compilation.bmodel
     - name: INT8
       bmodel: $(workdir)/1b.compilation/compilation.bmodel
