@@ -64,10 +64,10 @@ from multiprocessing import Process, Queue
 import threading
 
 class Runner:
-    def __init__(self, bmodel, val_path, list_file, config, threads):
+    def __init__(self, bmodel, devices, val_path, list_file, config, threads):
         self.val_path = val_path
         self.config = config
-        self.model = SGInfer(bmodel)
+        self.model = SGInfer(bmodel, devices=devices)
         self.input_info = self.model.get_input_info()
         self.size = config.get('size', 224)
 
@@ -209,8 +209,9 @@ def harness_main(tree, config, args):
     val_path = tree.expand_variables(config, input_config['image_path'])
     list_file = tree.expand_variables(config, input_config['image_label'])
     bmodel = tree.expand_variables(config, args['bmodel'])
+    devices = tree.global_config['devices']
     runner = Runner(
-        bmodel, val_path, list_file, pre_config,
+        bmodel, devices, val_path, list_file, pre_config,
         args.get('threads', 8))
     runner.join()
     return runner.get_stats()
@@ -231,6 +232,8 @@ def main():
     parser.add_argument(
         '--size', required=True, type=int, help='Crop size. (Resized to 256 then crop)')
     parser.add_argument('--threads', type=int, default=4)
+    parser.add_argument('--devices', '-d', type=int, nargs='*', help='Devices',
+        default=[0])
     args = parser.parse_args()
 
     logging.basicConfig(
@@ -241,7 +244,7 @@ def main():
         mean = mean[:1] * 3
     config = dict(mean=mean, scale=args.scale, size=args.size)
     print(config)
-    runner = Runner(args.bmodel, args.image_path, args.list_file, config, args.threads)
+    runner = Runner(args.bmodel, args.devices, args.image_path, args.list_file, config, args.threads)
     runner.join()
     print(runner.get_stats())
 

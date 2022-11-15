@@ -308,12 +308,12 @@ def inference(net, input_path, loops, tpu_id):
   cap.release()
   return prediction
 
-def process(bmodel, imagedir, anno):
+def process(bmodel, devices, imagedir, anno):
   with open(anno) as g:
     js = json.load(g)
   preds = []
   if os.path.isfile(bmodel):
-    net = SGInfer(bmodel)
+    net = SGInfer(bmodel, devices=devices)
   else:
     print("no bmodel!")
     sys.exit(1)
@@ -381,16 +381,26 @@ def harness_yolo(tree, config, args):
   dataset_info = config['dataset']
   imagedir = tree.expand_variables(config, dataset_info['imagedir'])
   anno = tree.expand_variables(config, dataset_info['anno'])
-  result = process(bmodel, imagedir, anno)
+  devices = tree.global_config['devices']
+  result = process(bmodel, devices, imagedir, anno)
   output = result.results['bbox']
   return {k: f'{v:.2%}' for k, v in output.items()}
 
 #for test
 def main():
-  bmodel = sys.argv[1]
-  imagedir = sys.argv[2]
-  anno = sys.argv[3]
-  result = process(bmodel, imagedir, anno)
+  import argparse
+  parser = argparse.ArgumentParser(description='tpu_perf topk harness')
+  parser.add_argument(
+    '--bmodel', type=str, help='Bmodel path')
+  parser.add_argument(
+    '--imagedir', type=str, help='Val image path')
+  parser.add_argument(
+    '--anno', type=str, help='Annotation path')
+  parser.add_argument('--devices', '-d',
+    type=int, nargs='*', help='Devices',
+    default=[0])
+  args = parser.parse_args()
+  result = process(args.bmodel, args.devices, args.imagedir, args.anno)
   print(result)
 
 if __name__ == '__main__':

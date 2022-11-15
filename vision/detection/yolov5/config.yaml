@@ -33,7 +33,8 @@ cali:
     --cali_image_path=$(coco2017_val_set)
     --cali_image_preprocess='resize_h=640,resize_w=384;scale=0.003921569,bgr2rgb=True'
     --target=BM1684X
-    --try_cali_accuracy_opt='-fpfwd_outputs=< 24 >18,< 24 >55,< 24 >86'
+    --try_cali_accuracy_opt
+        '-fpfwd_outputs=< 24 >18,< 24 >55,< 24 >86;-asym_threshold=true'
     --test_iterations=1
     --debug_cmd="not_call_bmnetu"
 
