@@ -198,7 +198,12 @@ def case_list():
         lambda acc, x: acc + x,
         [git_changed_files(c) for c in get_relevant_commits()], [])
 
-    files = [f for f in files if not f.endswith('.md')]
+    # Skip certain files
+    files = [
+        f for f in files
+        if not f.endswith('.md')
+        and not f.endswith('.txt')
+        and not os.path.basename(f).startswith('.')]
 
     is_model = lambda x: x.startswith('vision')
 
