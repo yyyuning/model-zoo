@@ -3,9 +3,8 @@
 name: Test
 on:
   push:
-  pull_request_target:
+  pull_request:
     branches: [main]
-    types: [labeled]
   schedule:
     # * is a special character in YAML so you have to quote this string
     # UTC time 22:30
@@ -15,6 +14,7 @@ jobs:
   test:
     name: Test Model Compiling
     runs-on: build
+    environment: testing
 
     steps:
       ##########################
@@ -25,11 +25,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Schedule Env
-        if: ${{ github.event_name == 'schedule' }}
+      - name: Set Optional Env
+        if: "${{ github.event_name == 'schedule' || \
+                 contains( \
+                   github.event.pull_request.labels.*.name, \
+                   'full_regression' \
+                 ) }}"
         run: |
           echo "FULL_TEST=true" >> $GITHUB_ENV
 
       - run: .github/workflows/test_build.sh
-        env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}

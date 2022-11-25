@@ -101,6 +101,11 @@ def latest_tpu_perf_whl():
     return f'https://github.com/{tpu_perf_whl}'
 
 import shutil
+def remove_tree(path):
+    if os.path.exists(path):
+        logging.info(f'Removing {path}')
+        shutil.rmtree(path)
+
 @pytest.fixture(scope='session')
 def nntc_docker(latest_tpu_perf_whl):
     # Env assertion
@@ -109,9 +114,7 @@ def nntc_docker(latest_tpu_perf_whl):
     root = os.path.dirname(os.path.dirname(__file__))
     logging.info(f'Working dir {root}')
     os.chdir(root)
-    build_path = './build'
-    if os.path.exists(build_path):
-        shutil.rmtree(build_path)
+    remove_tree('./build')
 
     # Download
     ftp_server = os.environ.get('FTP_SERVER')
@@ -147,6 +150,10 @@ def nntc_docker(latest_tpu_perf_whl):
     # Docker cleanup
     logging.info(f'Removing NNTC container {nntc_container.name}')
     nntc_container.remove(v=True, force=True)
+
+    remove_tree('./build')
+    remove_tree('./data')
+    remove_tree(nntc_dir)
 
 import subprocess
 
@@ -205,12 +212,12 @@ def case_list():
         and not f.endswith('.txt')
         and not os.path.basename(f).startswith('.')]
 
-    is_model = lambda x: x.startswith('vision')
+    is_model = lambda x: x.startswith('vision') or x.startswith('language')
+    files = [f for f in files if is_model(f)]
 
-    if [f for f in files if not is_model(f)]:
-        return '--full'
-    dirs = set([os.path.dirname(f) for f in files if f.startswith('')])
-    return ' '.join(dirs)
+    dirs = set([os.path.dirname(f) for f in files])
+    s = ' '.join(dirs)
+    return s
 
 @pytest.fixture(scope='session')
 def nntc_env(nntc_docker, latest_tpu_perf_whl, case_list):
@@ -224,6 +231,8 @@ def nntc_env(nntc_docker, latest_tpu_perf_whl, case_list):
         f'bash -c "pip3 install {latest_tpu_perf_whl}"',
         tty=True)
     assert ret == 0
+
+    logging.info(f'Running cases "{case_list}"')
 
     yield dict(**nntc_docker, case_list=case_list)
 

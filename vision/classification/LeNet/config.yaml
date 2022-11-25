@@ -28,7 +28,7 @@ time_only_cali:
     --debug_cmd='use_fake_data_to_test;not_call_bmnetu'
     --target=BM1684X
     --cali_iterations 1
-    --input_shapes=[64,1,28,28]
+    --input_shapes=[1,1,28,28]
 
 bmnetu_options:
   --opt=2

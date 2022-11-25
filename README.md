@@ -1,4 +1,4 @@
-# Open Pre-Trained Models [![Test](https://github.com/sophgo/model-zoo/actions/workflows/ci.yml/badge.svg)](https://github.com/sophgo/model-zoo/actions/workflows/ci.yml)
+# Open Pre-Trained Models [![Test](https://github.com/sophgo/model-zoo/actions/workflows/ci.yml/badge.svg?event=schedule)](https://github.com/sophgo/model-zoo/actions/workflows/ci.yml)
 
 ## Usage - Compile and run
 
