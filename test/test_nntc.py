@@ -2,13 +2,8 @@ import logging
 import pytest
 import re
 
-def tpu_perf_run(nntc_env, cmd):
-    if not nntc_env['case_list']:
-        logging.info(f'Skip {cmd}')
-        return
-
+def container_run(nntc_env, cmd):
     container = nntc_env['nntc_container']
-    cmd = f'{cmd} {nntc_env["case_list"]}'
     ret, output = container.exec_run(
         f'bash -c "{cmd}"',
         tty=True)
@@ -24,8 +19,16 @@ def tpu_perf_run(nntc_env, cmd):
 
 @pytest.fixture(scope='module')
 def test_efficiency(nntc_env):
-    tpu_perf_run(nntc_env, 'python3 -m tpu_perf.build --time')
+    if not nntc_env['case_list']:
+        logging.info(f'Skip efficiency test')
+        return
+    container_run(nntc_env, f'python3 -m tpu_perf.build --time {nntc_env["case_list"]}')
 
 @pytest.mark.usefixtures('test_efficiency')
 def test_accuracy(nntc_env):
-    tpu_perf_run(nntc_env, 'python3 -m tpu_perf.build')
+    if not nntc_env['case_list']:
+        logging.info(f'Skip nntc accuracy test')
+        return
+    container_run(nntc_env, 'pip3 install -r /workspace/requirements.txt')
+    container_run(nntc_env, f'python3 -m tpu_perf.make_lmdb {nntc_env["case_list"]}')
+    container_run(nntc_env, f'python3 -m tpu_perf.build {nntc_env["case_list"]}')
