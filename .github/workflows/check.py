@@ -160,6 +160,17 @@ def leaf_dir_should_have_readme(path):
     assert has_child or has_readme, \
         f'Please provide a README.md in {path}'
 
+def all_model_should_be_in_cases_list(path):
+    with open('full_cases.txt') as f:
+        full = [line.strip(' \n') for line in f.readlines() if line]
+        full_set = set(full)
+        assert len(full) == len(full_set)
+    for fn in walk(path):
+        if not fn.endswith('config.yaml'):
+            continue
+        model = os.path.dirname(fn)
+        assert model in full_set, f'Please add {model} to full_cases.txt'
+
 def lint_markdowns(path):
     #leaf_dir_should_have_readme(path)
     for fn in walk(path):
@@ -172,7 +183,9 @@ def main():
     path = os.path.abspath(os.path.join(path, '../..'))
 
     os.chdir(path)
-    lint_markdowns('vision')
+    for path in ['vision', 'language']:
+        lint_markdowns(path)
+        all_model_should_be_in_cases_list(path)
 
 if __name__ == '__main__':
     main()
