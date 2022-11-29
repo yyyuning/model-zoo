@@ -169,23 +169,34 @@ def get_relevant_commits():
     if len(head_parents) == 1:
         return ['HEAD']
     assert len(head_parents) == 2
+    branch_a_is_good = branch_b_is_good = True
     ap, bp = a, b = head_parents
     al, bl = [], []
     while True:
-        al.append(ap)
-        parents = git_commit_parents(ap)
-        assert len(parents) == 1
-        if b == parents[0]:
-            bl = None
-            break
-        ap = parents[0]
+        if branch_a_is_good:
+            al.append(ap)
+            parents = git_commit_parents(ap)
+            if len(parents) > 1:
+                branch_a_is_good = False
+                al = None
+            else:
+                if b == parents[0]:
+                    bl = None
+                    break
+                ap = parents[0]
 
-        bl.append(bp)
-        parents = git_commit_parents(bp)
-        if a == parents[0]:
-            al = None
-            break
-        bp = parents[0]
+        if branch_b_is_good:
+            bl.append(bp)
+            parents = git_commit_parents(bp)
+            if len(parents) > 1:
+                branch_b_is_good = False
+                bl = None
+            else:
+                if a == parents[0]:
+                    al = None
+                    break
+                bp = parents[0]
+    assert al or bl, 'PR commits are diverged'
     return al if al is not None else bl
 
 def git_changed_files(rev):
