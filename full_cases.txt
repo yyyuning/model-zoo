@@ -32,3 +32,5 @@ vision/detection/mtcnn
 vision/reid/market_bot_R50
 language/nlp/bert
 language/asr/conformer
+vision/classification/mm_resnet50
+vision/classification/efficientnetv2
