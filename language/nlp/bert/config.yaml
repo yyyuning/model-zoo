@@ -19,7 +19,7 @@ fp_loops:
 fp_compile_options:
   python3 -m bmnetp
     --model $(model)
-    --shapes [[1,256]]
+    --shapes [1,256]
     --net_name $(name)
     --target BM1684X
     --enable_profile True
