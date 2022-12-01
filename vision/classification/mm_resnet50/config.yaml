@@ -31,7 +31,7 @@ cali:
     --model $(model)
     --input_shapes "[1,3,32,32]"
     --net_name $(name)
-    --cali_iterations 200
+    --cali_iterations 100
     --cali_lmdb $(cifar100_cali_lmdb)
     --target BM1684X
     --test_iterations 1
