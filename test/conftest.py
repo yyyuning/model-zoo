@@ -247,6 +247,29 @@ def nntc_env(nntc_docker, latest_tpu_perf_whl, case_list):
 
     yield dict(**nntc_docker, case_list=case_list)
 
+@pytest.fixture(scope='session')
+def get_cifar100():
+    data_server = os.environ.get('DATA_SERVER')
+    assert data_server
+    fn = 'cifar-100-python.tar.gz'
+    url = os.path.join(data_server, fn)
+    logging.info(f'Downloading {fn}')
+    ret = os.system(
+        f'curl -s {url} | tar -zx --strip-components=1 '
+         '-C dataset/CIFAR100/cifar-100-python/')
+    assert ret == 0
+
+@pytest.fixture(scope='session')
+def get_imagenet_val():
+    data_server = os.environ.get('DATA_SERVER')
+    assert data_server
+    fn = 'ILSVRC2012_img_val.tar'
+    url = os.path.join(data_server, fn)
+    logging.info(f'Downloading {fn}')
+    ret = os.system(
+        f'curl -s {url} | tar -x -C dataset/ILSVRC2012/ILSVRC2012_img_val/')
+    assert ret == 0
+
 def main():
     logging.basicConfig(level=logging.INFO)
     files = reduce(
