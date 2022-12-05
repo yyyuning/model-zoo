@@ -4,11 +4,12 @@ import re
 
 def container_run(nntc_env, cmd):
     container = nntc_env['nntc_container']
+    logging.info(cmd)
     ret, output = container.exec_run(
         f'bash -c "{cmd}"',
         tty=True)
     output = output.decode()
-    logging.info(f'{cmd}\n{output}')
+    logging.info(f'------>\n{output}')
     m = re.search('(?<=please check ).+\\.log', output)
     if m:
         log_fn = m.group(0).replace('/workspace', '.')
