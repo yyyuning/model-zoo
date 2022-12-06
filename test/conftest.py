@@ -227,7 +227,14 @@ def case_list():
     files = [f for f in files if is_model(f)]
 
     dirs = set([os.path.dirname(f) for f in files])
-    s = ' '.join(dirs)
+    def has_config(d):
+        try:
+            next(filter(lambda x: x.endswith('config.yaml'), os.listdir(d)))
+        except StopIteration:
+            return False
+        else:
+            return True
+    s = ' '.join(d for d in dirs if has_config(d))
     return s
 
 @pytest.fixture(scope='session')
@@ -272,6 +279,7 @@ def get_imagenet_val():
 
 def main():
     logging.basicConfig(level=logging.INFO)
+
     files = reduce(
         lambda acc, x: acc + x,
         [git_changed_files(c) for c in get_relevant_commits()], [])
