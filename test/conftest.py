@@ -247,6 +247,10 @@ def nntc_env(nntc_docker, latest_tpu_perf_whl, case_list):
 
     yield dict(**nntc_docker, case_list=case_list)
 
+def execute_cmd(cmd):
+    ret = os.system(cmd)
+    assert ret == 0, f'{cmd} failed!'
+
 @pytest.fixture(scope='session')
 def get_cifar100():
     data_server = os.environ.get('DATA_SERVER')
@@ -254,10 +258,9 @@ def get_cifar100():
     fn = 'cifar-100-python.tar.gz'
     url = os.path.join(data_server, fn)
     logging.info(f'Downloading {fn}')
-    ret = os.system(
-        f'curl -s {url} | tar -zx --strip-components=1 '
-         '-C dataset/CIFAR100/cifar-100-python/')
-    assert ret == 0
+    cmd = f'curl -s {url} | tar -zx --strip-components=1 ' \
+         '-C dataset/CIFAR100/cifar-100-python/'
+    execute_cmd(cmd)
 
 @pytest.fixture(scope='session')
 def get_imagenet_val():
@@ -266,9 +269,32 @@ def get_imagenet_val():
     fn = 'ILSVRC2012_img_val.tar'
     url = os.path.join(data_server, fn)
     logging.info(f'Downloading {fn}')
-    ret = os.system(
-        f'curl -s {url} | tar -x -C dataset/ILSVRC2012/ILSVRC2012_img_val/')
-    assert ret == 0
+    cmd = f'curl -s {url} | tar -x -C dataset/ILSVRC2012/ILSVRC2012_img_val/'
+    execute_cmd(cmd)
+
+@pytest.fixture(scope='session')
+def get_coco2017_val():
+    data_server = os.environ.get('DATA_SERVER')
+    assert data_server
+    fn = 'val2017.zip'
+    url = os.path.join(data_server, fn)
+    logging.info(f'Downloading {fn}')
+    cmd = f'curl -o val2017.zip -s {url}'
+    execute_cmd(cmd)
+    cmd = 'unzip -o val2017.zip -d dataset/COCO2017'
+    execute_cmd(cmd)
+    cmd = 'rm val2017.zip'
+    execute_cmd(cmd)
+
+    fn = 'annotations_trainval2017.zip'
+    url = os.path.join(data_server, fn)
+    logging.info(f'Downloading {fn}')
+    cmd = f'curl -o annotations.zip -s {url}'
+    execute_cmd(cmd)
+    cmd = 'unzip -o annotations.zip -d dataset/COCO2017/'
+    execute_cmd(cmd)
+    cmd = 'rm annotations.zip'
+    execute_cmd(cmd)
 
 def main():
     logging.basicConfig(level=logging.INFO)

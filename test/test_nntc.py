@@ -26,7 +26,7 @@ def test_efficiency(nntc_env):
     container_run(nntc_env, f'python3 -m tpu_perf.build --time {nntc_env["case_list"]}')
 
 @pytest.mark.usefixtures('test_efficiency')
-def test_accuracy(nntc_env, get_imagenet_val, get_cifar100):
+def test_accuracy(nntc_env, get_imagenet_val, get_cifar100, get_coco2017_val):
     if not nntc_env['case_list']:
         logging.info(f'Skip nntc accuracy test')
         return
