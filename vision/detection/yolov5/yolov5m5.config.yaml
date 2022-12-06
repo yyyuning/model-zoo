@@ -1,7 +1,7 @@
 ---
 
 name: yolov5m-5
-gops: 10.21
+gops: 47.8
 
 model: $(home)/yolov5m-5.0.pt
 
