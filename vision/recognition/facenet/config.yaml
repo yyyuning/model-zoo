@@ -25,7 +25,7 @@ fp_compile_options:
   --input_names "input"
   --output_names "embeddings"
   --shapes [1,160,160,3]
-  --target BM1684X
+  --target $(target)
   --cmp True
   --enable_profile True
 
@@ -39,7 +39,7 @@ cali:
     --cali_iterations=200
     --cali_image_path=$(lfw_cali_set)
     --cali_image_preprocess="resize_h=160,resize_w=160;mean_value=127.5:127.5:127.5,scale=0.0078125,bgr2rgb=True"
-    --target=BM1684X
+    --target=$(target)
     --test_iterations=1
     --debug_cmd="not_suspend;not_call_bmnetu"
 
@@ -51,7 +51,7 @@ time_only_cali:
     --input_names="input"
     --output_names="embeddings"
     --cali_iterations=200
-    --target=BM1684X
+    --target=$(target)
     --test_iterations=1
     --debug_cmd="not_call_bmnetu;not_suspend;use_fake_data_to_test"
 
@@ -61,7 +61,7 @@ bmnetu_batch_sizes: [1, 4, 8, 16]
 bmnetu_options:
   --model $(int8_model)
   --weight $(int8_weight)
-  --target BM1684X
+  --target $(target)
   --enable_profile True
   --output_as_fp32 embeddings
   --cmp True
