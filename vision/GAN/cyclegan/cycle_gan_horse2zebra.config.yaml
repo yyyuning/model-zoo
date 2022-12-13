@@ -25,14 +25,14 @@ time_only_cali:
     --test_iterations=1
     --debug_cmd="use_fake_data_to_test;not_suspend;not_call_bmnetu"
 
-# int8_model: $(workdir)/$(name)_bmpaddle_deploy_int8_unique_top.prototxt
-# int8_weight: $(workdir)/$(name)_bmpaddle.int8umodel
+int8_model: $(workdir)/$(name)_bmpaddle_deploy_int8_unique_top.prototxt
+int8_weight: $(workdir)/$(name)_bmpaddle.int8umodel
 
-# bmnetu_batch_sizes: [1, 4]
-# bmnetu_options:
-#   --model $(int8_model)
-#   --weight $(int8_weight)
-#   --target BM1684X
-#   --enable_profile True
+bmnetu_batch_sizes: [1]
+bmnetu_options:
+  --model $(int8_model)
+  --weight $(int8_weight)
+  --target BM1684X
+  --enable_profile True
 
-# precision: false
+precision: false
