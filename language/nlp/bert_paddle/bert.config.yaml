@@ -1,7 +1,7 @@
 ---
 
 name: bert
-gops: 10.21
+gops: 2.73
 
 model: $(home)/bert/
 

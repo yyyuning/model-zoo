@@ -1,7 +1,7 @@
 ---
 
 name: pp_humanseg_lite_mini
-gops: 10.21
+gops: 0.217
 
 model: $(home)/pp_humanseg_lite_mini_supervisely/
 

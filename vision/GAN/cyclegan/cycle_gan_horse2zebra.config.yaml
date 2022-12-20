@@ -1,7 +1,7 @@
 ---
 
 name: cyclegan_horse2zebra
-gops: 10.21
+gops: 2.78
 
 model: $(home)/cyclegan_horse2zebra/
 
