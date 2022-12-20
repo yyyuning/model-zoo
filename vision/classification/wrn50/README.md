@@ -17,7 +17,8 @@ To tackle these problems, in this work we conduct a detailed experimental study 
 
 ## References
 
-* This code was used for experiments with Wide Residual Networks (BMVC 2016) http://arxiv.org/abs/1605.07146 by Sergey Zagoruyko and Nikos Komodakis.
+* This code was used for experiments with Wide Residual Networks by Sergey Zagoruyko and Nikos Komodakis
+* [Wide Residual Networks(BMVC 2016)](http://arxiv.org/abs/1605.07146)
 
 
 ## License
