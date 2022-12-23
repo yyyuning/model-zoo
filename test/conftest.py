@@ -178,6 +178,13 @@ def nntc_docker(latest_tpu_perf_whl):
 
 import subprocess
 
+def git_commit_id(rev):
+    p = subprocess.run(
+        f'git rev-parse {rev}',
+        shell=True, check=True,
+        capture_output=True)
+    return p.stdout.decode().strip(' \n')
+
 def git_commit_parents(rev='HEAD'):
     p = subprocess.run(
         f'git rev-parse {rev}^@',
@@ -185,40 +192,38 @@ def git_commit_parents(rev='HEAD'):
         capture_output=True)
     return p.stdout.decode().strip(' \n').split()
 
+def dig(c, callback, depth=0, max_depth=100):
+    if not callback(c):
+        return
+    if depth >= max_depth:
+        return
+    for p in git_commit_parents(c):
+        dig(p, callback, depth + 1, max_depth)
+
 def get_relevant_commits():
     head_parents = git_commit_parents()
     if len(head_parents) == 1:
         return ['HEAD']
     assert len(head_parents) == 2
-    branch_a_is_good = branch_b_is_good = True
-    ap, bp = a, b = head_parents
-    al, bl = [], []
-    while True:
-        if branch_a_is_good:
-            al.append(ap)
-            parents = git_commit_parents(ap)
-            if len(parents) > 1:
-                branch_a_is_good = False
-                al = None
-            else:
-                if b == parents[0]:
-                    bl = None
-                    break
-                ap = parents[0]
 
-        if branch_b_is_good:
-            bl.append(bp)
-            parents = git_commit_parents(bp)
-            if len(parents) > 1:
-                branch_b_is_good = False
-                bl = None
-            else:
-                if a == parents[0]:
-                    al = None
-                    break
-                bp = parents[0]
-    assert al or bl, 'PR commits are diverged'
-    return al if al is not None else bl
+    base_set = set()
+    def cb(x):
+        if x in base_set:
+            return False
+        base_set.add(x)
+        return True
+    dig(git_commit_id('origin/main'), cb)
+
+    ps = [p for p in head_parents if p not in base_set]
+    result = []
+    while ps:
+        result += ps
+        new_ps = []
+        for p in ps:
+            new_ps += [new_p for new_p in git_commit_parents(p) if new_p not in base_set]
+        ps = new_ps
+
+    return result
 
 def git_changed_files(rev):
     p = subprocess.run(
