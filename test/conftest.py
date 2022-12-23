@@ -79,13 +79,34 @@ class ExpandParser(HTMLParser):
             self.results.append(attrs.get('href'))
 
 def get_latest_tpu_perf():
-    resp = requests.get('https://github.com/sophgo/tpu-perf/releases')
+    backoff = 0.5
+    url = 'https://github.com/sophgo/tpu-perf/releases'
+    for i in range(10):
+        try:
+            resp = requests.get(url, timeout=15)
+            break
+        except requests.exceptions.Timeout:
+            logging.warning(f'Failed to query {url}, retry after {backoff}s')
+            time.sleep(backoff)
+            backoff *= 2
+    assert resp
+
     resp.raise_for_status()
     parser = ReleasePageParser()
     parser.feed(resp.text)
 
     page = parser.results[0]
-    resp = requests.get(page)
+    backoff = 0.5
+    for i in range(10):
+        try:
+            resp = requests.get(page, timeout=15)
+            break
+        except requests.exceptions.Timeout:
+            logging.warning(f'Failed to query {page}, retry after {backoff}s')
+            time.sleep(backoff)
+            backoff *= 2
+    assert resp
+
     resp.raise_for_status()
     parser = ExpandParser()
     parser.feed(resp.text)
