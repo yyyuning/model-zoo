@@ -14,7 +14,7 @@ This new architecture inherits both advantages of residual and densely connected
 
 ## References
 
-* Dpn68** was described in the paper titled [Dual Path Networks](https://arxiv.org/abs/1707.01629)
+* **Dpn68** was described in the paper titled [Dual Path Networks](https://arxiv.org/abs/1707.01629)
 
 ## License
 MIT License
