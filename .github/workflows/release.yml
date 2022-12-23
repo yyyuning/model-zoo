@@ -18,6 +18,7 @@ jobs:
           fetch-depth: 1
           clean: false
           lfs: true
+      - run: git lfs pull --exclude '' --include '*'
       - run: .github/workflows/pack.sh
         env:
           REMOTE: ${{ secrets.REMOTE }}
