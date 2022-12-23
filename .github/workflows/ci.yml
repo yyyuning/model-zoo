@@ -29,6 +29,8 @@ jobs:
           clean: false
           lfs: true
 
+      - run: git lfs pull --exclude '' --include '*'
+
       - name: Set Optional Env
         if: "${{ github.event_name == 'schedule' || \
                  contains( \
