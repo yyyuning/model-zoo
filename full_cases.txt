@@ -48,3 +48,13 @@ vision/detection/retinaface
 language/nlp/bert
 language/nlp/bert_paddle
 language/asr/conformer
+vision/classification/AlexNet-Caffe
+vision/classification/inception_v1
+vision/classification/ECANet-Torch
+vision/classification/ResNeXt50
+vision/classification/ResNet34
+vision/classification/MobileNet-Caffe-v3
+vision/RNN/GRU
+vision/tracking/GOTURN-Caffe
+vision/tracking/MDNet-Torch
+vision/tracking/SiamMask-Torch
