@@ -1,6 +1,6 @@
 ---
 
-name: bert
+name: bert_paddle
 gops: 2.73
 
 model: $(home)/bert/
