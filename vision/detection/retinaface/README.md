@@ -18,8 +18,7 @@ RetinaFace is a practical single-stage SOTA face detector.
 
 ## References
 
-* [biubug6/Pytorch_Retinaface](https://github.com/biubug6/Pytorch_Retinaface)
-* [Retinaface_model_v2](https://pan.baidu.com/s/12h97Fy1RYuqMMIV-RpzdPg) Password: fstq
+* [biubug6/Pytorch\_Retinaface](https://github.com/biubug6/Pytorch_Retinaface)
 * [RetinaFace: Single-stage Dense Face Localisation in the Wild](https://arxiv.org/abs/1905.00641)
 
 ## License

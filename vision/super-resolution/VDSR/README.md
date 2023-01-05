@@ -14,13 +14,12 @@ VDSR was proposed by Jiwon Kim et al. in 2016. The author mainly uses a deep con
 
 ## Dataset
 
-* [Train Data](https://cv.snu.ac.kr/research/VDSR/train_data.zip)
-* [Test Data](https://cv.snu.ac.kr/research/VDSR/test_data.zip)
+* [Accurate Image Super-Resolution Using Very Deep Convolutional Networks](https://cv.snu.ac.kr/research/VDSR/)
 
 ## References
 
 * [Accurate Image Super-Resolution Using Very Deep Convolutional Networks](https://arxiv.org/abs/1511.04587)
-* [BobLiu20/SuperResolution_Caffe](https://github.com/BobLiu20/SuperResolution_Caffe)
+* [BobLiu20/SuperResolution\_Caffe](https://github.com/BobLiu20/SuperResolution_Caffe)
 * [Web](https://cv.snu.ac.kr/research/VDSR/)
 
 ## License

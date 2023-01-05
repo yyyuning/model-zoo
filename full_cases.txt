@@ -1,3 +1,5 @@
+vision/OCR/PP-OCRv3det
+vision/OCR/PP-OCRv3cls
 vision/OCR/CRNN
 vision/video-recognition/C3D
 vision/pose-estimation/openpose
