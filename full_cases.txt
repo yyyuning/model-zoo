@@ -60,3 +60,10 @@ vision/RNN/GRU
 vision/tracking/GOTURN-Caffe
 vision/tracking/MDNet-Torch
 vision/tracking/SiamMask-Torch
+vision/OCR/PP-OCRv3rec
+vision/segmentation/pp-humanseg
+vision/detection/ppyolox
+vision/detection/ssd-mobilenet
+vision/detection/ppyolov3
+vision/detection/pp-picodet
+language/nlp/mobilebert_tflite
