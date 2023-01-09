@@ -20,6 +20,7 @@ vision/classification/vgg11-torch
 vision/classification/mobilenet-v2
 vision/classification/InceptionBN-21k-for-Caffe
 vision/classification/ResNeXt
+vision/classification/ResNet50_vd_paddle
 vision/super-resolution/SRCNN
 vision/super-resolution/VDSR
 vision/detection/ultralytics-yolov3
@@ -29,6 +30,7 @@ vision/detection/py-R-FCN
 vision/detection/yolov3_tiny
 vision/detection/ppyolo
 vision/detection/ppyoloe
+vision/detection/PP_LiteSeg_paddle
 vision/segmentation/paddle_humansegv1_lite
 vision/classification/shufflenet_v2
 vision/classification/inception_resnet_v2
