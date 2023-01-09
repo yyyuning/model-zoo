@@ -68,3 +68,4 @@ vision/detection/ssd-mobilenet
 vision/detection/ppyolov3
 vision/detection/pp-picodet
 language/nlp/mobilebert_tflite
+language/translate/opus-mt-zh-en
