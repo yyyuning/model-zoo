@@ -1,6 +1,7 @@
 vision/OCR/PP-OCRv3det
 vision/OCR/PP-OCRv3cls
 vision/OCR/CRNN
+vision/OCR/OCRv3_paddle
 vision/video-recognition/C3D
 vision/pose-estimation/openpose
 vision/classification/MobileNet-Caffe-v2
