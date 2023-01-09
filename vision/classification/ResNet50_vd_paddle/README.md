@@ -18,7 +18,7 @@ The ResNet series model was proposed in 2015 and won the championship in the ILS
 
 ## References
 
-* [[PaddlePaddle/PaddleClas]](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.4/docs/zh_CN/models/ResNet_and_vd.md)
+* [PaddlePaddle/PaddleClas](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.4/docs/zh_CN/models/ResNet_and_vd.md)
 
 ## License
 
