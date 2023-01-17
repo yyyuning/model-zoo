@@ -30,7 +30,6 @@ vision/detection/py-R-FCN
 vision/detection/yolov3_tiny
 vision/detection/ppyolo
 vision/detection/ppyoloe
-vision/detection/PP_LiteSeg_paddle
 vision/segmentation/paddle_humansegv1_lite
 vision/classification/shufflenet_v2
 vision/classification/inception_resnet_v2
@@ -44,9 +43,9 @@ vision/classification/mm_resnet50
 vision/classification/efficientnetv2
 vision/segmentation/unet_plusplus
 vision/recognition/facenet
-vision/segmentation/pp_liteseg
 vision/segmentation/deeplabv3p
 vision/segmentation/mobileseg
+vision/segmentation/pp_liteseg
 vision/GAN/cyclegan
 vision/detection/retinaface
 language/nlp/bert

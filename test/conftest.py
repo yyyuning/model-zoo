@@ -290,7 +290,7 @@ def get_relevant_commits():
 
 def git_changed_files(rev):
     p = subprocess.run(
-        f'git show --pretty="" --name-only {rev}',
+        f'git show --pretty="" --diff-filter=ACMRTUXB --name-only {rev}',
         shell=True, check=True,
         capture_output=True)
     return p.stdout.decode().strip(' \n').split()
