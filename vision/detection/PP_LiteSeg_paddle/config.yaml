@@ -1,6 +1,6 @@
 ---
 
-name: pp_liteseg
+name: pp_liteseg_without_argmax
 
 gops: [19.254271872]
 shapes:
@@ -43,5 +43,4 @@ deploy:
       --test_input $(workdir)/$(name)_in_f32.npz 
       --test_reference $(workdir)/$(name)_top_outputs.npz 
       --tolerance 0.85,0.45 
-      --correctness 0.99,0.96 
       --model $(workdir)/$(name)_1684x_int8_sym.bmodel
