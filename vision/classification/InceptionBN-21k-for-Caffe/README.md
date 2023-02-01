@@ -14,7 +14,7 @@ Inception_v2 model is an improvement of the Inception_v1, the improvements mainl
 
 ## Dataset
 
-* This model is a pretrained model on [full imagenet dataset](https://doi.org/10.1109/CVPR.2009.5206848) with 14,197,087 images in 21,841 classes.
+* This model is a pretrained model on [full imagenet dataset](https://ieeexplore.ieee.org/document/5206848) with 14,197,087 images in 21,841 classes.
 * Dataset used for validation: [ImageNet (ILSVRC2012)](http://www.image-net.org/challenges/LSVRC/2012/).
 
 ## References

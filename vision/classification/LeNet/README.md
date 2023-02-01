@@ -18,7 +18,7 @@ LeNet is a efficient convolutional neural network for handwritten character reco
 
 ## References
 
-* **LeNet** Model is from the paper [Gradient-Based Learning Applied to Document Recognition](https://doi.org/10.1109/5.726791)
+* **LeNet** Model is from the paper [Gradient-Based Learning Applied to Document Recognition](https://ieeexplore.ieee.org/document/726791)
 * The pretrained model is from the [repository](https://github.com/allegrofb/LeNet)
 * [BVLC/caffe](https://github.com/BVLC/caffe/blob/master/examples/01-learning-lenet.ipynb)
 

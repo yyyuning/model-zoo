@@ -18,7 +18,7 @@ YOLOv3 is a family of object detection architectures and models pretrained on th
 
 ## References
 
-* [YOLO v3-Tiny: Object Detection and Recognition using one stage improved model](https://doi.org/10.1109/ICACCS48705.2020.9074315)
+* [YOLO v3-Tiny: Object Detection and Recognition using one stage improved model](https://ieeexplore.ieee.org/document/9074315)
 * [ultralytics/yolov3](https://github.com/ultralytics/yolov3)
 * [pjreddie.com](https://pjreddie.com/darknet/yolo/)
 
