@@ -65,7 +65,7 @@ fp_compile_options:
     --shapes $(input_shapes)
     --net_name $(name)
     --target $(target)
-    --enable_profile true
+    --enable_profile True
     --descs=[0,int64,0,30]
 
 time_only_cali:

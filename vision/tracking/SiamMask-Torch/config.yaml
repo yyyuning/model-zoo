@@ -51,7 +51,7 @@ fp_compile_options:
     --shapes $(input_shapes)
     --net_name $(name)
     --target BM1684X
-    --enable_profile true
+    --enable_profile True
 
 time_only_cali:
   python3 -m ufw.cali.cali_model
