@@ -161,6 +161,12 @@ def nntc_docker(latest_tpu_perf_whl):
     image = 'sophgo/tpuc_dev:latest'
     pull_image(client, image)
 
+    # Glob kernel module
+    import glob
+    kernel_module = glob.glob(os.path.join(nntc_dir, 'lib/*kernel_module*'))
+    assert kernel_module
+    kernel_module = kernel_module[0]
+
     # NNTC container
     nntc_container = client.containers.run(
         image, 'bash',
@@ -168,6 +174,7 @@ def nntc_docker(latest_tpu_perf_whl):
         restart_policy={'Name': 'always'},
         environment=[
             f'PATH=/workspace/{nntc_dir}/bin:/usr/local/bin:/usr/bin:/bin',
+            f'BMCOMPILER_KERNEL_MODULE_PATH=/workspace/{kernel_module}',
             f'NNTC_TOP=/workspace/{nntc_dir}'],
         tty=True, detach=True)
     logging.info(f'Setting up NNTC')
