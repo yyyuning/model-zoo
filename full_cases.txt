@@ -46,6 +46,7 @@ vision/recognition/facenet
 vision/segmentation/deeplabv3p
 vision/segmentation/mobileseg
 vision/segmentation/pp_liteseg
+vision/segmentation/ERFNet-Caffe
 vision/GAN/cyclegan
 vision/detection/retinaface
 language/nlp/bert
@@ -57,7 +58,8 @@ vision/classification/ECANet-Torch
 vision/classification/ResNeXt50
 vision/classification/ResNet34
 vision/classification/MobileNet-Caffe-v3
-vision/RNN/GRU
+vision/classification/vgg19
+language/nlp/GRU
 vision/tracking/GOTURN-Caffe
 vision/tracking/MDNet-Torch
 vision/tracking/SiamMask-Torch
@@ -68,4 +70,16 @@ vision/detection/ssd-mobilenet
 vision/detection/ppyolov3
 vision/detection/pp-picodet
 language/nlp/mobilebert_tflite
+vision/classification/EfficientNet-B0
+vision/classification/EfficientNet-B1
+vision/classification/EfficientNet-B4
+vision/classification/EfficientNet-B5
+vision/classification/EfficientNet-B7
+vision/classification/HRNet-Torch
+vision/detection/vggssd_300
+vision/detection/CenterNet-Torch
+vision/detection/yolov3-torch
+vision/detection/yolov3_320
+vision/detection/yolov3_spp
+vision/detection/yolov3_608
 language/translate/opus-mt-zh-en
