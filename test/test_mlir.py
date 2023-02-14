@@ -18,10 +18,8 @@ def container_run(mlir_env, cmd):
 
     assert ret == 0
 
-@pytest.mark.fixture('test_milr_efficiency')
 def test_mlir_efficiency(mlir_env):
     if not mlir_env['case_list']:
         logging.info(f'Skip efficiency test')
         return
-    container_run(mlir_env, f'python3 -m tpu_perf.build --mlir {mlir_env["case_list"]}')
-
+    container_run(mlir_env, f'python3 -m tpu_perf.build --mlir {mlir_env["case_list"]} --outdir mlir_out')
