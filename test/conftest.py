@@ -318,7 +318,7 @@ def git_changed_files(rev):
 from functools import reduce
 @pytest.fixture(scope='session')
 def case_list():
-    if os.environ.get('TEST_CASES'):
+    if 'TEST_CASES' in os.environ:
         return os.environ['TEST_CASES'].strip() or '--full'
 
     if os.environ.get('FULL_TEST'):
