@@ -24,7 +24,7 @@ jobs:
     name: Test Model Compiling
     runs-on: build
     environment: testing
-    timeout-minutes: 2880
+    timeout-minutes: 10080
 
     steps:
       ##########################
