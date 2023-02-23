@@ -11,6 +11,7 @@ GRU, introduced by Cho et al. in 2014, is designed to solve the vanishing gradie
 |Model            |Download                        |
 |-----------------|:-------------------------------|
 | GRU(pytorch)    |[18MB](gru.pt)                  |
+| GRU(onnx)       |[18MB](gru.onnx)                |
 
 ## Dataset
 
