@@ -32,6 +32,7 @@ vision/detection/yolov3_tiny
 vision/detection/ppyolo
 vision/detection/ppyoloe
 vision/detection/scrfd
+vision/detection/yoloface
 vision/segmentation/paddle_humansegv1_lite
 vision/classification/shufflenet_v2
 vision/classification/inception_resnet_v2
