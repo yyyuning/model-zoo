@@ -3,14 +3,6 @@ import logging
 import docker
 import os
 
-def pull_image(client, name):
-    try:
-        client.images.get(name)
-        logging.info(f'Docker image {name} already exists')
-    except docker.errors.ImageNotFound:
-        logging.info(f'Pulling image {name}')
-        client.images.pull(name)
-
 import re
 import io
 import tarfile
@@ -164,7 +156,7 @@ def nntc_docker(latest_tpu_perf_whl):
     # Docker init
     client = docker.from_env()
     image = 'sophgo/tpuc_dev:v2.1'
-    pull_image(client, image)
+    client.images.pull(image)
 
     # Glob kernel module
     import glob
@@ -225,7 +217,7 @@ def mlir_docker(latest_tpu_perf_whl):
     # Docker init
     client = docker.from_env()
     image = 'sophgo/tpuc_dev:latest'
-    pull_image(client, image)
+    client.images.pull(image)
 
     # MLIR container
     logging.info(f'Setting up MLIR')
