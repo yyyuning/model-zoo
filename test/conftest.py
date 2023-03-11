@@ -37,29 +37,42 @@ class FTPClient:
         tar = tarfile.open(fileobj=buf)
         tar.extractall()
 
-    def get_nntc(self):
-        path = f'/sophon-sdk/tpu-nntc/{self.release_type}/latest_release'
+    def download(self, fn, out_dir):
+        out_fn = os.path.join(out_dir, os.path.basename(fn))
+        logging.info(f'Download {fn} to {out_fn}')
+        with open(out_fn, 'wb') as fp:
+            self.session.retrbinary(
+                f'RETR {fn}',
+                fp.write)
+        return out_fn
+
+    def get_release(self, name, get_fn=None, is_tar=False):
+        if get_fn is None:
+            get_fn = lambda x: x.startswith(f'{name}_')
+        path = f'/sophon-sdk/{name}/{self.release_type}/latest_release'
         self.session.cwd(path)
-        fn = next(filter(lambda x: x.startswith('tpu-nntc_'), self.session.nlst()))
-        logging.info(f'Latest nntc package is {fn}')
-        out_dir = fn.replace('.tar.gz', '')
-        if os.path.exists(out_dir):
-            logging.info(f'{out_dir} already exists')
-            return fn
-        self.download_and_untar(os.path.join(path, fn))
+        fn = next(filter(get_fn, self.session.nlst()))
+        logging.info(f'Latest {name} package is {fn}')
+        if is_tar:
+            out_dir = fn.replace('.tar.gz', '')
+            if os.path.exists(out_dir):
+                logging.info(f'{out_dir} already exists')
+                return fn
+            self.download_and_untar(os.path.join(path, fn))
+        else:
+            self.download(os.path.join(path, fn), '.')
         return fn
 
+    def get_nntc(self):
+        return self.get_release('tpu-nntc', is_tar=True)
+
     def get_mlir(self):
-        path = f'/sophon-sdk/tpu-mlir/{self.release_type}/latest_release'
-        self.session.cwd(path)
-        fn = next(filter(lambda x: x.startswith('tpu-mlir_'), self.session.nlst()))
-        logging.info(f'Latest mlir package is {fn}')
-        out_dir = fn.replace('.tar.gz', '')
-        if os.path.exists(out_dir):
-            logging.info(f'{out_dir} already exists')
-            return fn
-        self.download_and_untar(os.path.join(path, fn))
-        return fn
+        return self.get_release('tpu-mlir', is_tar=True)
+
+    def get_libsophon(self):
+        return self.get_release(
+            'libsophon',
+            get_fn=lambda x: x.startswith('sophon-libsophon_') and x.endswith('amd64.deb'))
 
 from html.parser import HTMLParser
 
@@ -132,9 +145,14 @@ def latest_tpu_perf_whl():
 import shutil
 import glob
 def remove_tree(path):
-    for match in glob.glob(path):
-        logging.info(f'Removing {match}')
-        shutil.rmtree(match)
+    for m in glob.glob(path):
+        logging.info(f'Removing {m}')
+        if os.path.isdir(m):
+            shutil.rmtree(m)
+        else:
+            os.remove(m)
+
+import uuid
 
 @pytest.fixture(scope='session')
 def nntc_docker(latest_tpu_perf_whl):
@@ -144,7 +162,6 @@ def nntc_docker(latest_tpu_perf_whl):
     root = os.path.dirname(os.path.dirname(__file__))
     logging.info(f'Working dir {root}')
     os.chdir(root)
-    remove_tree('out*')
 
     # Download
     ftp_server = os.environ.get('FTP_SERVER')
@@ -189,13 +206,31 @@ def nntc_docker(latest_tpu_perf_whl):
 
     yield dict(docker=client, nntc_container=nntc_container)
 
+    # Chown so we can delete them later
+    dirs_to_remove = ['*.tar', 'out*', 'data', 'tpu-nntc*']
+    nntc_container.exec_run(
+        f'bash -c "chown -R {os.getuid()} {" ".join(dirs_to_remove)}"',
+        tty=True)
+
     # Docker cleanup
     logging.info(f'Removing NNTC container {nntc_container.name}')
     nntc_container.remove(v=True, force=True)
 
-    remove_tree('out*')
-    remove_tree('data')
-    remove_tree('tpu-nntc*')
+    # Upload for runtime jobs
+    model_tar = f'{uuid.uuid4()}.tar'
+    subprocess.run(
+        f'bash -c "tar -T <(find out* -name \'*.bmodel\') -cvf {model_tar}"',
+        shell=True, check=True)
+    swap_server = os.environ['SWAP_SERVER']
+    subprocess.run(
+        f'curl {swap_server} -X POST -F file=@{model_tar}',
+        shell=True, check=True)
+    output_fn = os.environ['GITHUB_OUTPUT']
+    with open(output_fn, 'a') as f:
+        f.write(f'NNTC_MODEL_TAR={model_tar}')
+
+    for d in dirs_to_remove:
+        remove_tree(d)
 
 @pytest.fixture(scope='session')
 def mlir_docker(latest_tpu_perf_whl):
@@ -205,7 +240,6 @@ def mlir_docker(latest_tpu_perf_whl):
     root = os.path.dirname(os.path.dirname(__file__))
     logging.info(f'Working dir {root}')
     os.chdir(root)
-    remove_tree('mlir_out*')
 
     # Download
     ftp_server = os.environ.get('FTP_SERVER')
@@ -244,12 +278,18 @@ def mlir_docker(latest_tpu_perf_whl):
 
     yield dict(docker=client, mlir_container=mlir_container)
 
+    # Chown so we can delete them later
+    dirs_to_remove = ['mlir_out*', 'tpu-mlir*']
+    mlir_container.exec_run(
+        f'bash -c "chown -R {os.getuid()} {" ".join(dirs_to_remove)}"',
+        tty=True)
+
     # Docker cleanup
     logging.info(f'Removing MLIR container {mlir_container.name}')
     mlir_container.remove(v=True, force=True)
 
-    remove_tree('mlir_out*')
-    remove_tree('tpu-mlir*')
+    for d in dirs_to_remove:
+        remove_tree(d)
 
 import subprocess
 
@@ -310,6 +350,7 @@ def git_changed_files(rev):
 from functools import reduce
 @pytest.fixture(scope='session')
 def case_list():
+    return 'vision/detection/mtcnn'
     if 'TEST_CASES' in os.environ:
         return os.environ['TEST_CASES'].strip() or '--full'
 
@@ -427,6 +468,52 @@ def get_coco2017_val():
         execute_cmd(cmd)
         cmd = 'rm annotations.zip'
         execute_cmd(cmd)
+
+@pytest.fixture(scope='session')
+def runtime_docker(latest_tpu_perf_whl):
+    assert os.path.exists('/run/docker.sock')
+    root = os.path.dirname(os.path.dirname(__file__))
+    logging.info(f'Working dir {root}')
+    os.chdir(root)
+
+    ftp_server = os.environ.get('FTP_SERVER')
+    assert ftp_server
+    f = FTPClient(ftp_server)
+    libsophon_fn = f.get_libsophon()
+
+    client = docker.from_env()
+    image = 'sophgo/tpuc_dev:latest'
+    client.images.pull(image)
+
+    runtime_container = client.containers.run(
+        image, 'bash',
+        volumes=[f'{root}:/workspace'],
+        restart_policy={'Name': 'always'},
+        environment=[
+            f'PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/sophon/libsophon-current/bin'],
+        tty=True, detach=True)
+
+    if 'GITHUB_ENV' in os.environ:
+        with open(os.environ['GITHUB_ENV'], 'a') as f:
+            f.write(f'RUNTIME_CONTAINER={runtime_container.name}\n')
+
+    logging.info(f'Runtime container {runtime_container.name}')
+
+    ret, _ = runtime_container.exec_run(
+        f'bash -c "pip3 install {latest_tpu_perf_whl}"',
+        tty=True)
+    assert ret == 0
+    ret, _ = runtime_container.exec_run(
+            f'bash -c "apt-get install -y /workspace/{libsophon_fn}"',
+            tty=True)
+    remove_tree('*.deb')
+    assert ret == 0
+
+    yield dict(docker=client, runtime_container=runtime_container)
+
+    # Docker cleanup
+    logging.info(f'Removing runtime container {runtime_container.name}')
+    runtime_container.remove(v=True, force=True)
 
 def main():
     logging.basicConfig(level=logging.INFO)

@@ -19,12 +19,13 @@ on:
         type: string
 
 jobs:
-  test:
-    if: github.repository == 'sophgo/model-zoo'
+  test_build:
+    if: github.repository == 'yyyuning/model-zoo'
     name: Test Model Compiling
     runs-on: build
-    environment: testing
     timeout-minutes: 10080
+    outputs:
+      NNTC_MODEL_TAR: ${{ steps.test.outputs.NNTC_MODEL_TAR }}
 
     steps:
       ##########################
@@ -38,7 +39,7 @@ jobs:
           lfs: true
 
       - name: LFS Pull
-        run: git lfs pull --exclude '' --include '*'
+        run: git lfs pull --exclude '' --include 'vision/detection/mtcnn' --include 'dataset/samples/stock_market.jpg'
 
       - name: Set Optional Env
         if: "${{ github.event_name == 'schedule' || \
@@ -50,7 +51,43 @@ jobs:
           echo "FULL_TEST=true" >> $GITHUB_ENV
 
       - name: Test
-        run: ".github/workflows/test_build.sh ${{ inputs.cases }}"
+        run: ".github/workflows/test.sh build ${{ inputs.cases }}"
+        id: test
+
+      - name: Cleanup
+        if: ${{ cancelled() || failure() }}
+        run: .github/workflows/cleanup.sh
+
+  test_run:
+    if: github.repository == 'yyyuning/model-zoo'
+    name: Test Model Runtime
+    runs-on: runtime
+    needs: test_build
+
+    steps:
+      ##########################
+      # Checkout the code base #
+      ##########################
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          clean: false
+          lfs: false
+
+      - name: Set Optional Env
+        if: "${{ github.event_name == 'schedule' || \
+                 contains( \
+                   github.event.pull_request.labels.*.name, \
+                   'full_regression' \
+                 ) }}"
+        run: |
+          echo "FULL_TEST=true" >> $GITHUB_ENV
+
+      - name: Test
+        run: ".github/workflows/test.sh runtime ${{ inputs.cases }}"
+        env:
+          NNTC_MODEL_TAR: ${{ needs.test_build.outputs.NNTC_MODEL_TAR }}
 
       - name: Cleanup
         if: ${{ cancelled() || failure() }}

@@ -18,6 +18,7 @@ def container_run(mlir_env, cmd):
 
     assert ret == 0
 
+@pytest.mark.build
 def test_mlir_efficiency(mlir_env):
     if not mlir_env['case_list']:
         logging.info(f'Skip efficiency test')

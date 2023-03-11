@@ -38,6 +38,7 @@ def make_lmdb(nntc_env):
     assert ret == 0
     container_run(nntc_env, f'python3 -m tpu_perf.make_lmdb {nntc_env["case_list"]}')
 
+@pytest.mark.build
 @pytest.mark.parametrize('target', ['BM1684', 'BM1684X'])
 def test_accuracy(target, nntc_env, get_imagenet_val, get_cifar100, get_coco2017_val, make_lmdb):
     if not nntc_env['case_list']:
@@ -47,6 +48,7 @@ def test_accuracy(target, nntc_env, get_imagenet_val, get_cifar100, get_coco2017
     # Build for accuracy test
     container_run(nntc_env, f'python3 -m tpu_perf.build {nntc_env["case_list"]} --outdir out_acc_{target} --target {target}')
 
+@pytest.mark.build
 @pytest.mark.parametrize('target', ['BM1684', 'BM1684X'])
 def test_efficiency(target, nntc_env, get_imagenet_val, get_cifar100, get_coco2017_val):
     if not nntc_env['case_list']:

@@ -10,3 +10,4 @@ function docker_rm()
 
 docker_rm $NNTC_CONTAINER
 docker_rm $MLIR_CONTAINER
+docker_rm $RUNTIME_CONTAINER

@@ -17,9 +17,9 @@ function quiet_exec()
 }
 
 if [ ! -z $1 ]; then
-    echo "Testing \"$1\""
-    export TEST_CASES=$1
+    echo "Testing \"${@:2}\""
+    export TEST_CASES="${@:2}"
 fi
 
 quiet_exec pip3 install -r test/requirements.txt
-python3 -m pytest test
+python3 -m pytest -m ${1} test
